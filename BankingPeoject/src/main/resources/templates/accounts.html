@@ -1,0 +1,59 @@
+<!-- accounts.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking Application - Accounts</title>
+</head>
+<body>
+    <h1>Banking Application - Accounts</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Account Number</th>
+                <th>Account Holder</th>
+                <th>Balance</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="accountList">
+            <!-- Accounts will be dynamically added here -->
+        </tbody>
+    </table>
+    <br>
+    <button onclick="location.href='create.html'">Create Account</button>
+
+    <script>
+        // Fetch account data from the backend
+        fetch('http://localhost:8080/api/accounts')
+            .then(response => response.json())
+            .then(data => {
+                const accountList = document.getElementById('accountList');
+                data.forEach(account => {
+                    const row = `
+                        <tr>
+                            <td>${account.id}</td>
+                            <td>${account.accountNumber}</td>
+                            <td>${account.accountHolder}</td>
+                            <td>${account.balance}</td>
+                            <td><button onclick="editAccount(${account.id})">Edit</button></td>
+                        </tr>
+                    `;
+                    accountList.insertAdjacentHTML('beforeend', row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching account data:', error);
+                alert('Error fetching account data from backend.');
+            });
+
+        // Function to handle edit button click
+        function editAccount(id) {
+            // Redirect to edit page with account ID
+            location.href = `edit.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>
